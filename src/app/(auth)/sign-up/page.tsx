@@ -10,9 +10,9 @@ function Page() {
       type="SIGN_UP"
       schema={signUpSchema}
       defaultValues={{
+        fullName: "",
         email: "",
         password: "",
-        fullName: "",
         universityId: 0,
         universityCard: "",
       }}
