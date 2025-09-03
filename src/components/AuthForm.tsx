@@ -24,6 +24,8 @@ import { Input } from "./ui/input";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import Link from "next/link";
 import ImageUpload from "./ImageUpload";
+import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 interface Props<T extends FieldValues> {
   schema: ZodType<T, FieldValues>;
@@ -39,13 +41,32 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: Props<T>) => {
   const isSignIn = type === "SIGN_IN";
+  const router = useRouter();
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
-  const handleSubmit: SubmitHandler<T> = async (data) => {};
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    const result = await onSubmit(data);
+
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: isSignIn
+          ? "Signed in successfully"
+          : "Account created successfully",
+      });
+
+      router.push("/");
+    } else {
+      toast({
+        title: `Error ${isSignIn ? "Signing In" : "Signing Up"}`,
+        description: result.error,
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -101,7 +122,10 @@ const AuthForm = <T extends FieldValues>({
 
       <p className="text-center text-base font-medium">
         {isSignIn ? "New to BookWise?" : "Already have an account?"}{" "}
-        <Link href={isSignIn ? "/sign-up" : "/sign-in"} className="font-bold text-primary">
+        <Link
+          href={isSignIn ? "/sign-up" : "/sign-in"}
+          className="font-bold text-primary"
+        >
           {isSignIn ? "Create an account" : "Sign in"}
         </Link>
       </p>
