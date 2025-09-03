@@ -8,7 +8,7 @@ function Home() {
   return (
     <>
       <BookOverview {...sampleBooks[0]} />
-      <BookList title="Popular Books" books={sampleBooks} />
+      <BookList title="Popular Books" books={sampleBooks} containerClassname="mt-16" />
     </>
   );
 }
