@@ -10,6 +10,7 @@ import config from "@/lib/config"
 
 interface UploadOptions {
   file: File;
+  folder?: string;
   authenticator: () => Promise<AuthResponse>;
   abortController?: AbortController;
   onProgress?: (progress: number) => void;
@@ -17,6 +18,7 @@ interface UploadOptions {
 
 export async function uploadHandler({
   file,
+  folder,
   authenticator,
   abortController,
   onProgress,
@@ -29,6 +31,7 @@ export async function uploadHandler({
       token,
       signature,
       file,
+      folder,
       publicKey: config.env.imagekit.publicKey,
       fileName: file.name,
       onProgress: (event) => {

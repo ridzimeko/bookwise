@@ -4,7 +4,8 @@ import { NextResponse } from "next/server";
 
 const imagekit = getUploadAuthParams({
   publicKey: config.env.imagekit.publicKey,
-  privateKey: config.env.imagekit.privateKey
+  privateKey: config.env.imagekit.privateKey,
+  expire: Math.floor(Date.now() / 1000) + 60, // Expires in 1 minute
 });
 
 export async function GET() {
