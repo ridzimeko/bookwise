@@ -7,11 +7,15 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface Props {
-  accept?: string;
-  onFileUpload: (filePath: string) => void;
+  type: "image" | "video";
+  onFileChange: (filePath: string) => void;
+  accept: string;
+  placeholder: string;
   maxFileSizeMB?: number;
+  variant: "dark" | "light";
   folder?: string;
   value?: string;
 }
@@ -44,18 +48,32 @@ const authenticator = async () => {
   }
 };
 
-function ImageUpload({
+function FileUpload({
+  type,
   accept,
+  placeholder,
   folder,
+  variant,
   maxFileSizeMB,
-  onFileUpload,
+  onFileChange,
   value,
 }: Props) {
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [file, setFile] = useState<{ filePath: string}>({ filePath: value || "" });
+  const [file, setFile] = useState<{ filePath: string }>({
+    filePath: value || "",
+  });
   const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const styles = {
+    button:
+      variant === "dark"
+        ? "bg-dark-300"
+        : "bg-light-600 border-gray-100 border",
+    placeholder: variant === "dark" ? "text-light-100" : "text-slate-500",
+    text: variant === "dark" ? "text-light-100" : "text-dark-400",
+  };
 
   const uploadFile = async (file: File) => {
     setError(null);
@@ -68,7 +86,7 @@ function ImageUpload({
         onProgress: setProgress,
       });
       setFile({ filePath: result.filePath || "" });
-      onFileUpload(result.filePath || "");
+      onFileChange(result.filePath || "");
       toast.success("File uploaded successfully!");
       return result;
     } catch (err: any) {
@@ -81,13 +99,22 @@ function ImageUpload({
   };
 
   const validateFile = (file: File) => {
-    if (maxFileSizeMB && file.size > maxFileSizeMB * 1024 * 1024) {
-      setError(`File size exceeds the limit of ${maxFileSizeMB} MB`);
+    const MAX_IMAGE_SIZE = maxFileSizeMB ?? 20; // 20 MB default
+    const MAX_VIDEO_SIZE = maxFileSizeMB ?? 50; // 50 MB default
+
+    if (type === "image" && file.size > MAX_IMAGE_SIZE * 1024 * 1024) {
+      setError(`File size exceeds the limit of ${MAX_IMAGE_SIZE} MB`);
       toast.error(error);
       return false;
     }
+    if (type === "video" && file.size > MAX_VIDEO_SIZE * 1024 * 1024) {
+      setError(`File size exceeds the limit of ${MAX_VIDEO_SIZE} MB`);
+      toast.error(error);
+      return false;
+    }
+
     return true;
-  }
+  };
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -111,12 +138,15 @@ function ImageUpload({
           e.preventDefault();
           inputRef.current?.click();
         }}
-        className="form-input cursor-pointer"
+        className={cn("upload-btb", styles.button)}
       >
-        <Upload className="mr-2" size={16} />
-        {uploading
-          ? `Uploading... ${Math.round(progress)}%`
-          : "Upload University Card"}
+        <p className="flex items-center">
+          <Upload className="mr-2" size={16} />
+          {uploading
+            ? `Uploading... ${Math.round(progress)}%`
+            : placeholder || "Upload a File"}
+        </p>
+        <p className="upload-filename">{file.filePath}</p>
       </Button>
       {file.filePath && !uploading && (
         <Image
@@ -125,12 +155,12 @@ function ImageUpload({
           alt="Uploaded card preview"
           width={150}
           height={100}
-          className="mt-2 rounded-md border"
-          />
+          className="mt-2 rounded-md border object-contain w-full"
+        />
       )}
       {error && <span className="ml-2 text-sm text-red-600">{error}</span>}
     </ImageKitProvider>
   );
 }
 
-export default ImageUpload;
+export default FileUpload;
