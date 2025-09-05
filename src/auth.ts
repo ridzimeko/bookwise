@@ -19,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const user = await db
           .select()
           .from(usersTable)
-          .where(eq("email", credentials.email.toString()))
+          .where(eq(usersTable.email, credentials.email.toString()))
           .limit(1);
 
         if (user.length === 0) return null;
