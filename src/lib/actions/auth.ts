@@ -28,14 +28,15 @@ export const signInWithCredentials = async (
       password,
       redirect: false,
     });
+
     if (result?.error) {
       return { success: false, error: result.error };
     }
 
     return { success: true };
   } catch (error) {
-    console.error(error, "Sign in error!");
-    return { success: false, error: "Sign in error" };
+    console.log(error, "Signin error");
+    return { success: false, error: "Signin error" };
   }
 };
 

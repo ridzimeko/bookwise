@@ -1,3 +1,5 @@
+import { BookA, Bookmark, Home, User2, UserCheck } from "lucide-react";
+
 export const navigationLinks = [
   {
     href: "/library",
@@ -14,27 +16,27 @@ export const navigationLinks = [
 
 export const adminSideBarLinks = [
   {
-    img: "/icons/admin/home.svg",
+    img: Home,
     route: "/admin",
     text: "Home",
   },
   {
-    img: "/icons/admin/users.svg",
+    img: User2,
     route: "/admin/users",
     text: "All Users",
   },
   {
-    img: "/icons/admin/book.svg",
+    img: BookA,
     route: "/admin/books",
     text: "All Books",
   },
   {
-    img: "/icons/admin/bookmark.svg",
+    img: Bookmark,
     route: "/admin/borrow-records",
     text: "Borrow Records",
   },
   {
-    img: "/icons/admin/user.svg",
+    img: UserCheck,
     route: "/admin/account-requests",
     text: "Account Requests",
   },
