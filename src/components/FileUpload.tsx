@@ -2,7 +2,7 @@
 
 import config from "@/lib/config";
 import { uploadHandler } from "@/lib/uploadHandler";
-import { Image, ImageKitProvider, UploadResponse } from "@imagekit/next";
+import { Image, ImageKitProvider, UploadResponse, Video } from "@imagekit/next";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Upload } from "lucide-react";
@@ -70,7 +70,7 @@ function FileUpload({
     button:
       variant === "dark"
         ? "bg-dark-300"
-        : "bg-light-600 border-gray-100 border",
+        : "bg-light-600 hover:bg-light-100 border-gray-100 border",
     placeholder: variant === "dark" ? "text-light-100" : "text-slate-500",
     text: variant === "dark" ? "text-light-100" : "text-dark-400",
   };
@@ -138,7 +138,7 @@ function FileUpload({
           e.preventDefault();
           inputRef.current?.click();
         }}
-        className={cn("upload-btb", styles.button)}
+        className={cn("upload-btn overflow-hidden", styles.button)}
       >
         <p className="flex items-center">
           <Upload className="mr-2" size={16} />
@@ -146,17 +146,30 @@ function FileUpload({
             ? `Uploading... ${Math.round(progress)}%`
             : placeholder || "Upload a File"}
         </p>
-        <p className="upload-filename">{file.filePath}</p>
+        {file.filePath && <p className="upload-filename">{file.filePath}</p>}
       </Button>
       {file.filePath && !uploading && (
-        <Image
-          urlEndpoint={urlEndpoint}
-          src={file.filePath}
-          alt="Uploaded card preview"
-          width={150}
-          height={100}
-          className="mt-2 rounded-md border object-contain w-full"
-        />
+        <div className="flex flex-row justify-center w-full">
+          {type === "image" && (
+            <Image
+              urlEndpoint={urlEndpoint}
+              src={file.filePath}
+              alt="Uploaded card preview"
+              width={300}
+              height={200}
+              className="mt-2 rounded-md border object-contain"
+            />
+          )}
+          {type === "video" && (
+            <Video
+              urlEndpoint={urlEndpoint}
+              src={file.filePath}
+              controls
+              height={400}
+              className="mt-2 rounded-md border object-contain w-full"
+            />
+          )}
+        </div>
       )}
       {error && <span className="ml-2 text-sm text-red-600">{error}</span>}
     </ImageKitProvider>

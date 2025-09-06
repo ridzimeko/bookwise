@@ -8,7 +8,10 @@ const nextConfig: NextConfig = {
     }
   },
   images: {
-    remotePatterns: [new URL('https://m.media-amazon.com/**')],
+    remotePatterns: [
+      new URL('https://m.media-amazon.com/**'),
+      new URL('https://ik.imagekit.io/**'),
+    ],
   },
   typescript: {
     ignoreBuildErrors: true,

@@ -19,6 +19,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
 import ColorPicker from "../ColorPicker";
+import { createBook } from "@/lib/admin/actions/book";
+import { toast } from "sonner";
 
 interface Props extends Partial<Book> {
   type?: "create" | "update";
@@ -30,20 +32,31 @@ const BookForm = ({ type, ...book }: Props) => {
   const form = useForm({
     resolver: zodResolver(bookSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      author: "",
-      genre: "",
+      title: "The Midnight Library",
+      description: "akwoakwoao",
+      author: "Meko",
+      genre: "Comedy",
       rating: 1,
       totalCopies: 1,
-      coverUrl: "",
+      coverUrl:
+        "https://ik.imagekit.io/katedev/81J6APjwxlL_w-0KhqRhb.webp?tr=w-384,c-at_max&tr=w-384,c-at_max",
       coverColor: "",
-      videoUrl: "",
+      videoUrl:
+        "https://ik.imagekit.io/katedev/mixkit-book-being-leafed-through-seen-in-detail-3819-hd-ready_h_rBTt3op.mp4",
       summary: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof bookSchema>) => {};
+  const onSubmit = async (values: z.infer<typeof bookSchema>) => {
+    const result = await createBook(values);
+
+    if (result.success) {
+      toast.success("Book Created successfully");
+      router.push(`/admin/books/${result.data.id}`);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   return (
     <Form {...form}>

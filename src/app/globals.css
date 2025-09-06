@@ -168,6 +168,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  button {
+    @apply cursor-pointer
+  }
 }
 
 /* Root */
@@ -270,11 +273,11 @@
 
 /* File Upload */
 .upload-btn {
-  @apply flex min-h-14 w-full items-center justify-center gap-1.5 rounded-md;
+  @apply flex flex-col min-h-14 h-fit w-full items-center justify-center gap-1.5 rounded-md;
 }
 
 .upload-filename {
-  @apply mt-1 text-center text-xs;
+  @apply mt-1 text-center text-xs text-nowrap text-ellipsis overflow-hidden max-w-72;
 }
 
 .progress {

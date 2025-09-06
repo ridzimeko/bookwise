@@ -15,6 +15,13 @@
       "when": 1756902998387,
       "tag": "0001_confused_wither",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757133718319,
+      "tag": "0002_overrated_nuke",
+      "breakpoints": true
     }
   ]
 }
