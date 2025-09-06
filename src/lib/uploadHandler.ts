@@ -5,21 +5,47 @@ import {
   ImageKitUploadNetworkError,
   upload,
 } from "@imagekit/next";
-import { AuthResponse } from "@imagekit/next/server";
 import config from "@/lib/config"
 
+const {
+  env: {
+    apiEndpoint,
+  },
+} = config;
+
 interface UploadOptions {
-  file: File;
+  file: File | Blob | string;
+  fileName: string;
   folder?: string;
-  authenticator: () => Promise<AuthResponse>;
   abortController?: AbortController;
   onProgress?: (progress: number) => void;
 }
 
+const authenticator = async () => {
+  try {
+    const response = await fetch(`${apiEndpoint}/api/auth/imagekit`);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      throw new Error(
+        `Request failed with status ${response.status}: ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    const { signature, expire, token } = data;
+
+    return { token, expire, signature };
+  } catch (error: any) {
+    throw new Error(`Authentication request failed: ${error.message}`);
+  }
+};
+
 export async function uploadHandler({
   file,
+  fileName,
   folder,
-  authenticator,
   abortController,
   onProgress,
 }: UploadOptions) {
@@ -32,8 +58,8 @@ export async function uploadHandler({
       signature,
       file,
       folder,
+      fileName,
       publicKey: config.env.imagekit.publicKey,
-      fileName: file.name,
       onProgress: (event) => {
         if (onProgress) onProgress((event.loaded / event.total) * 100);
       },

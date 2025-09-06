@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 function BookCard({
   id,
   title,
-  author,
   coverUrl = "",
   coverColor,
   genre,

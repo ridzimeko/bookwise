@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import React from "react";
 import BookCoverSvg from "./BookCoverSvg";
+import { Image } from "@imagekit/next";
+import config from "@/lib/config";
 
 type BookCoverVariant = "extraSmall" | "small" | "medium" | "regular" | "wide";
 
@@ -41,6 +42,7 @@ function BookCover({
       >
         {coverImage ? (
           <Image
+            urlEndpoint={config.env.imagekit.urlEndpoint}
             src={coverImage}
             alt="Book cover"
             fill

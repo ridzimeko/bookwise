@@ -22,31 +22,9 @@ interface Props {
 
 const {
   env: {
-    apiEndpoint,
-    imagekit: { publicKey, urlEndpoint },
+    imagekit: { urlEndpoint },
   },
 } = config;
-
-const authenticator = async () => {
-  try {
-    const response = await fetch(`${apiEndpoint}/api/auth/imagekit`);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`
-      );
-    }
-
-    const data = await response.json();
-    const { signature, expire, token } = data;
-
-    return { token, expire, signature };
-  } catch (error: any) {
-    throw new Error(`Authentication request failed: ${error.message}`);
-  }
-};
 
 function FileUpload({
   type,
@@ -82,7 +60,7 @@ function FileUpload({
     try {
       const result = await uploadHandler({
         file,
-        authenticator,
+        fileName: file.name,
         onProgress: setProgress,
       });
       setFile({ filePath: result.filePath || "" });
