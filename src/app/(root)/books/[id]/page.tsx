@@ -20,7 +20,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
   if (!bookDetails) redirect("/404");
   return (
     <>
-      <BookOverview {...bookDetails} userId={session?.user?.id} />
+      <BookOverview {...bookDetails} userId={session?.user?.id ?? ""} />
 
       <div className="book-details">
         <div className="flex-[1.5]">

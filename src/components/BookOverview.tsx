@@ -1,9 +1,17 @@
 import React from "react";
-import { Book, Star } from "lucide-react";
-import { Button } from "./ui/button";
+import { Star } from "lucide-react";
 import BookCover from "./BookCover";
+import BorrowBookBtn from "./BorrowBookBtn";
+import { db } from "@/database/drizzle";
+import { usersTable } from "@/database/schema";
+import { eq } from "drizzle-orm";
 
-function BookOverview({
+interface Props extends Book {
+  userId: string;
+}
+
+async function BookOverview({
+  id,
   title,
   description,
   author,
@@ -13,7 +21,24 @@ function BookOverview({
   rating,
   coverColor,
   coverUrl = "",
-}: Book) {
+  userId,
+}: Props) {
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, userId))
+    .limit(1);
+
+  if (!user) return null;
+
+  const borrowingEligibility = {
+    isEligible: availableCopies > 0 && user.status === "APPROVED",
+    message:
+      availableCopies < 0
+        ? "Book is not available"
+        : "You're not eligible to borrow this book",
+  };
+
   return (
     <section className="book-overview">
       <div className="flex flex-1 flex-col gap-5">
@@ -28,7 +53,7 @@ function BookOverview({
             <span className="font-semibold text-light-200">{genre}</span>
           </p>
 
-          <div className="flex flex-row gap-1">
+          <div className="flex flex-row items-center gap-1">
             <Star width={22} height={22} aria-label="icon" />
             <p>{rating}</p>
           </div>
@@ -44,11 +69,11 @@ function BookOverview({
         </div>
 
         <p className="book-description">{description}</p>
-
-        <Button className="book-overview_btn">
-          <Book width={20} height={20} />
-          <p className="font-bebas-neue text-xl text-dark-100">Borrow Book Request</p>
-        </Button>
+        <BorrowBookBtn
+          bookId={id}
+          userId={userId}
+          borrowingEligibility={borrowingEligibility}
+        />
       </div>
 
       <div className="relative flex flex-1 justify-center">
@@ -61,7 +86,11 @@ function BookOverview({
           />
 
           <div className="absolute left-16 top-10 rotate-12 opacity-40 max-sm:hidden">
-            <BookCover variant="wide" coverColor={coverColor} coverImage={coverUrl} />
+            <BookCover
+              variant="wide"
+              coverColor={coverColor}
+              coverImage={coverUrl}
+            />
           </div>
         </div>
       </div>
