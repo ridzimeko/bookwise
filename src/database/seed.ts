@@ -1,25 +1,33 @@
 import dummyBooks from "../../dummybooks.json";
-import { uploadHandler } from "../lib/uploadHandler";
 import { booksTable } from "./schema";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { config } from "dotenv"
+import {config} from "dotenv"
+import ImageKit from "imagekit";
 
-config({ path: '.env'})
+config({ path: '.env' })
 
-const sql = neon(process.env.DATABASE_URL!)
-export const db = drizzle({ client: sql })
+const sql = neon(process.env.DATABASE_URL!);
+export const db = drizzle({ client: sql });
+
+var imagekit = new ImageKit({
+  publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!,
+  privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
+  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
+});
 
 const uploadToImageKit = async (
   url: string,
   fileName: string,
   folder: string
-) => {
+) => {  
   try {
-    const response = await uploadHandler({
+    const response = await imagekit.upload({
       file: url,
       fileName,
       folder,
+      overwriteFile: true,
+      checks: `"file.size" < "20mb"`,
     });
 
     return response.filePath;
@@ -30,6 +38,7 @@ const uploadToImageKit = async (
 
 const seed = async () => {
   console.log("seeding data...");
+  let UPLOAD_FILE_COUNT = 0;
 
   try {
     for (const book of dummyBooks) {
@@ -45,17 +54,19 @@ const seed = async () => {
         "/books/video-trailer"
       );
 
+      UPLOAD_FILE_COUNT++;
       await db.insert(booksTable).values({
         ...book,
         coverUrl: coverUrl!,
-        videoUrl: videoUrl!
+        videoUrl: videoUrl!,
       });
     }
 
-    console.log("Data seeded successfully");
+    console.log(`uploaded ${UPLOAD_FILE_COUNT} book assets`)
+    console.log("Data seeded successfully!");
   } catch (error: any) {
     console.error("Error seeding data:", error?.message);
   }
 };
 
-seed()
+seed();
