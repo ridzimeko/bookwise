@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/UserAvatar";
 import { getInitials } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
@@ -22,14 +23,13 @@ export const columns: ColumnDef<AccountRequest>[] = [
     header: "Name",
     cell: ({ row }) => (
       <div className="flex flex-row items-center gap-3">
-        <Avatar>
-          <AvatarFallback className="bg-amber-100">
-            {getInitials(row.original.fullName || "A")}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar name={row.original.fullName} />
 
         <div className="flex flex-col max-md:hidden">
-          <p className="font-semibold text-dark-200"> {row.original.fullName}</p>
+          <p className="font-semibold text-dark-200">
+            {" "}
+            {row.original.fullName}
+          </p>
           <p className="text-xs text-light-500">{row.original.email}</p>
         </div>
       </div>

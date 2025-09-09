@@ -166,10 +166,10 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-light-100;
   }
   button {
-    @apply cursor-pointer
+    @apply cursor-pointer;
   }
 }
 

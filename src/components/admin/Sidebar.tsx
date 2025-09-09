@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Session } from "next-auth";
+import UserAvatar from "../UserAvatar";
 
 function Sidebar({ session }: { session: Session }) {
   const pathname = usePathname();
@@ -55,11 +56,7 @@ function Sidebar({ session }: { session: Session }) {
       </div>
 
       <div className="user">
-        <Avatar>
-          <AvatarFallback className="bg-amber-100">
-            {getInitials(session?.user?.name || "ID")}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar name={session.user?.name ?? ""} />
 
         <div className="flex flex-col max-md:hidden">
           <p className="font-semibold text-dark-200">{session.user?.name}</p>
