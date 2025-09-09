@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-function Header({ session }: { session: Session }) {
+function Header({ session }: { session: Session | null }) {
   async function logoutHandler() {
     "use server";
     await signOut();
@@ -47,7 +47,7 @@ function Header({ session }: { session: Session }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-36 py-2 bg-dark-500 border-none">
                 <DropdownMenuItem asChild className="dropdown-menu-item">
-                    <Link href="my-profile" className="flex flex-row items-center gap-2 cursor-pointer">
+                    <Link href="/my-profile" className="flex flex-row items-center gap-2 cursor-pointer">
                     <User />
                     My Profile
                   </Link>
@@ -64,7 +64,7 @@ function Header({ session }: { session: Session }) {
             </DropdownMenu>
           ) : (
             <div>
-              <Button asChild>
+              <Button asChild className="form-btn px-6">
                 <Link href="/sign-in">Login</Link>
               </Button>
             </div>

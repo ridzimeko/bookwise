@@ -23,21 +23,28 @@ async function BookOverview({
   coverUrl = "",
   userId,
 }: Props) {
-  const [user] = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.id, userId))
-    .limit(1);
-
-  if (!user) return null;
-
-  const borrowingEligibility = {
-    isEligible: availableCopies > 0 && user.status === "APPROVED",
-    message:
-      availableCopies < 0
-        ? "Book is not available"
-        : "You're not eligible to borrow this book",
+  let borrowingEligibility = {
+    isEligible: false,
+    message: "You have to login first to borrow a book",
   };
+
+  if (userId) {
+    const [user] = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.id, userId))
+      .limit(1);
+
+    if (!user) return null;
+
+    borrowingEligibility = {
+      isEligible: availableCopies > 0 && user.status === "APPROVED",
+      message:
+        availableCopies < 0
+          ? "Book is not available"
+          : "You're not eligible to borrow this book",
+    };
+  }
 
   return (
     <section className="book-overview">

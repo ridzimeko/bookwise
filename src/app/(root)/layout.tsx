@@ -10,8 +10,6 @@ import React, { ReactNode } from "react";
 async function layout({ children }: { children: ReactNode }) {
   const session = await auth();
 
-  if (!session) redirect("/sign-in");
-
   after(async () => {
     if (!session?.user?.id) return;
 
@@ -32,7 +30,7 @@ async function layout({ children }: { children: ReactNode }) {
   return (
     <main className="root-container">
       <div className="mx-auto max-w-7xl">
-        <Header session={session} />
+        <Header session={session ?? null} />
         <div className="mt-20 pb-10">{children}</div>
       </div>
     </main>
