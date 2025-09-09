@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import {
   DefaultValues,
   FieldValues,
@@ -40,6 +40,8 @@ const AuthForm = <T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: Props<T>) => {
+  const [loading, setLoading] = useState(false);
+
   const isSignIn = type === "SIGN_IN";
   const router = useRouter();
 
@@ -55,11 +57,13 @@ const AuthForm = <T extends FieldValues>({
       toast(
         isSignIn ? "Signed in successfully" : "Account created successfully"
       );
-
+      setLoading(false);
       router.push("/");
     } else {
       toast(result.error);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -74,7 +78,7 @@ const AuthForm = <T extends FieldValues>({
       </p>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-8 w-full"
         >
           {Object.keys(defaultValues).map((field) => (
@@ -116,7 +120,7 @@ const AuthForm = <T extends FieldValues>({
             />
           ))}
 
-          <Button type="submit" className="form-btn">
+          <Button type="submit" disabled={loading} className="form-btn">
             {isSignIn ? "Sign In" : "Sign Up"}
           </Button>
         </form>

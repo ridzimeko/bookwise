@@ -178,6 +178,10 @@
   @apply flex min-h-screen flex-1 flex-col bg-cover bg-pattern bg-top px-5 xs:px-10 md:px-16;
 }
 
+.dropdown-menu-item {
+  @apply text-base px-4 py-2 data-[highlighted]:bg-light-300/20;
+}
+
 .form-btn {
   @apply bg-primary text-dark-100 hover:bg-primary inline-flex min-h-14 w-full items-center justify-center rounded-md px-6 py-2 font-bold text-base;
 }

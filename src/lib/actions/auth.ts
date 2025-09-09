@@ -36,7 +36,7 @@ export const signInWithCredentials = async (
     return { success: true };
   } catch (error) {
     console.log(error, "Signin error");
-    return { success: false, error: "Signin error" };
+    return { success: false, error: "Your email or password is incorrect" };
   }
 };
 

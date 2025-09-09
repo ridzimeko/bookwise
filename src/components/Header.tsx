@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import UserAvatar from "./UserAvatar";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { LogOut, User } from "lucide-react";
 import { signOut } from "@/auth";
@@ -47,15 +46,15 @@ function Header({ session }: { session: Session }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-36 py-2 bg-dark-500 border-none">
-                <DropdownMenuItem asChild className="text-base px-4 py-2 hover:bg-light-100/50">
+                <DropdownMenuItem asChild className="dropdown-menu-item">
                     <Link href="my-profile" className="flex flex-row items-center gap-2 cursor-pointer">
                     <User />
                     My Profile
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="text-base px-4 py-2 hover:bg-light-100/50">
+                <DropdownMenuItem asChild className="dropdown-menu-item">
                   <form action={logoutHandler}>
-                    <button type="submit" className="flex flex-row items-center gap-2">
+                    <button type="submit" className="flex flex-row items-center gap-2 text-red-600">
                       <LogOut />
                       Sign Out
                     </button>
