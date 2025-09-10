@@ -29,7 +29,7 @@ async function layout({ children }: { children: ReactNode }) {
 
   return (
     <main className="root-container">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto w-full max-w-7xl">
         <Header session={session ?? null} />
         <div className="mt-20 pb-10">{children}</div>
       </div>

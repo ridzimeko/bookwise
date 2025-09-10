@@ -4,11 +4,12 @@ import { getInitials } from "@/lib/utils";
 
 interface Props {
   name: string;
+  className?: string;
 }
 
-function UserAvatar({ name }: Props) {
+function UserAvatar({ name, className }: Props) {
   return (
-    <Avatar>
+    <Avatar className={className}>
       <AvatarFallback className="bg-amber-100 text-black">
         {getInitials(name)}
       </AvatarFallback>
